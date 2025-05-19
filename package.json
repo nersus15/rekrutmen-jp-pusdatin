@@ -20,6 +20,7 @@
   "homepage": "https://github.com/nersus15/rekrutmen-tenaga-handsontest#readme",
   "dependencies": {
     "@hapi/hapi": "^21.4.0",
+    "@hapi/inert": "^7.1.0",
     "dotenv": "^16.5.0"
   },
   "devDependencies": {
