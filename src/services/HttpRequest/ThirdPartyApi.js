@@ -5,7 +5,7 @@ class ThirdPartyApi {
     constructor(){
         this.baseurl = 'https://dinkes.jakarta.go.id/apps/jp-2024/';
     }
-    async getAllRS(){
+    async getAllRS(summary = false){
         const dataRs = await fetch(`${this.baseurl}/all-rsud.json`).then(res => {
             const ct = res.headers.get('content-type');
             if(ct.toLowerCase() != 'application/json'){
@@ -26,14 +26,35 @@ class ThirdPartyApi {
             return res.json();
         });
 
-        const response = dataRs.map(rs => {
+        let response = dataRs.map(rs => {
             const status_rs = statusRs.find(status => status.organisasi_id == rs.organisasi_id);
 
             const {kode_rs, ...keys} = rs;
-            return {...keys, status: status_rs ? status_rs.status : null};
+            return {...keys, status: status_rs ? status_rs.status : 'belum terkoneksi', alamat: status_rs ? status_rs.alamat : null};
         });
+
+        if(summary){
+            const transaksiData = await fetch(`${this.baseurl}/transaksi-data-satusehat.json`).then(res => {
+                const ct = res.headers.get('content-type');
+                if(ct.toLowerCase() != 'application/json'){
+                    throw new ServerError("Tidak dapat mengambil resources yang dibutuhkan!");
+                }else if(res.status == 404){
+                    throw new NotFoundError("Resource yang dibutuhkan tidak ditemukan");
+                }
+                return res.json();
+            });
+
+            response = response.map(rs => {
+                const transaksi = transaksiData.find(t => t.organisasi_id == rs.organisasi_id);
+                
+                return {...rs, jumlah_pengiriman_data: transaksi ? transaksi.jumlah_pengiriman_data : null};
+            })
+        }
+
         return response;
-    }    
+    }
+
+
 }
 
 module.exports = ThirdPartyApi;

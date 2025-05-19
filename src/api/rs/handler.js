@@ -16,6 +16,17 @@ class RsHandler{
             },
         };
     }
+
+    async summary(request) {
+        const response = await this._service.getAllRS(true);
+        
+        return {
+            status: 'success',
+            data: {
+                response
+            },
+        };
+    }
 }
 
 module.exports = RsHandler;
