@@ -12,9 +12,7 @@ class RsHandler{
         
         return {
             status: 'success',
-            data: {
-                response
-            },
+            data: response,
         };
     }
 
@@ -34,9 +32,7 @@ class RsHandler{
         
         return {
             status: 'success',
-            data: {
-                response
-            },
+            data: response
         };
     }
 }
