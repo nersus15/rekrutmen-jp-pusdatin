@@ -4,6 +4,12 @@ const routes = (handler) => [
         path: '/rs/lists',
         handler: handler.getRs,
     },
+
+    {
+        method: 'GET',
+        path: '/rs/summary',
+        handler: handler.getSummary,
+    },
     
 ];
 

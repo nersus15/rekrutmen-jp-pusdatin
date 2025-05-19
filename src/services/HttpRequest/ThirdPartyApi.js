@@ -5,7 +5,7 @@ class ThirdPartyApi {
     constructor(){
         this.baseurl = 'https://dinkes.jakarta.go.id/apps/jp-2024/';
     }
-    async getAllRS(summary = false){
+    async getAllRS(summary = false, filter = {}){
         const dataRs = await fetch(`${this.baseurl}/all-rsud.json`).then(res => {
             const ct = res.headers.get('content-type');
             if(ct.toLowerCase() != 'application/json'){
@@ -47,11 +47,14 @@ class ThirdPartyApi {
             response = response.map(rs => {
                 const transaksi = transaksiData.find(t => t.organisasi_id == rs.organisasi_id);
                 
-                return {...rs, jumlah_pengiriman_data: transaksi ? transaksi.jumlah_pengiriman_data : null};
-            })
+                return {...rs, jumlah_pengiriman_data: transaksi ? transaksi.jumlah_pengiriman_data : 0};
+            });
         }
 
-        return response;
+        // Filter before return response
+        return response.filter(item => {
+            return (!filter.kelas || item.kelas_rs.toLowerCase() === filter.kelas.toLowerCase()) && (!filter.kabkota || item.kota_kab.toLowerCase() === filter.kabkota.toLowerCase());
+        });
     }
 
 

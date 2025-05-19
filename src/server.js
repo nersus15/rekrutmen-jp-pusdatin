@@ -6,6 +6,7 @@ const ClientError = require('./exceptions/ClientError');
 // Load Plugin RS
 const rs = require('./api/rs');
 const httpService = require('./services/HttpRequest/ThirdPartyApi');
+const rsValidator = require('./validator/rs');
 
 const init = async () => {
     const server = Hapi.server({
@@ -29,7 +30,7 @@ const init = async () => {
           plugin: rs,
           options: {
             service: new httpService(),
-            validator: null,
+            validator: rsValidator,
           },
         },
       ]);
