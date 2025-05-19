@@ -3,6 +3,10 @@ const Hapi = require('@hapi/hapi');
 const Inert = require('@hapi/inert')
 const ClientError = require('./exceptions/ClientError');
 
+// Load Plugin RS
+const rs = require('./api/rs');
+const httpService = require('./services/HttpRequest/ThirdPartyApi');
+
 const init = async () => {
     const server = Hapi.server({
         port: process.env.PORT,
@@ -19,6 +23,16 @@ const init = async () => {
             plugin: Inert,
         }
     ]);
+
+    await server.register([
+        {
+          plugin: rs,
+          options: {
+            service: new httpService(),
+            validator: null,
+          },
+        },
+      ]);
 
     server.ext('onPreResponse', (request, h) => {
         const { response } = request;
